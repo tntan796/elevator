@@ -38,9 +38,9 @@ public class Elevator {
 			RemoveFloor();
 		}
 		// Kiểm tra nếu thang không còn người đi lên xuống nữa thì chuyển thang sang trạng thái dừng.
-		if (this.persons.size() == 0) {
-			this.direction = DIRECTION.STOP;
-		}
+//		if (this.persons.size() == 0) {
+//			this.direction = DIRECTION.STOP;
+//		}
 	}
 	
 	public String GetListPerson(List<Person> persons) {

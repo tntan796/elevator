@@ -1,0 +1,12 @@
+/DIRECTION.class
+/Elevator.class
+/Floor.class
+/OCCUPIE_STATUS.class
+/OPEN_CLOSE_STATUS.class
+/Person.class
+/Test.class
+/ThreadPersonPressButton.class
+/ThreadRunOneElevator.class
+/ThreadUpdateUAllElevator.class
+/helper.class
+/mockDatas.class

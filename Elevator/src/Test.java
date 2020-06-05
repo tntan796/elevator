@@ -6,17 +6,14 @@ import java.util.Queue;
 import java.util.Scanner;
 
 public class Test {	
-	
-	List<Person> mockPersons = new ArrayList<Person>();
-	List<Elevator> mockElevators = new ArrayList<Elevator>();
+	static List<Person> persons = new ArrayList<Person>();
+	static List<Elevator> elevators = new ArrayList<Elevator>();
+	static List<Person> waitingPerson = new ArrayList<Person>();
 	
 	public static void main(String [] args) throws InterruptedException {
 		int totalElevator = 0;
 		int totalFloor = 0;
-		int maxPerson = 0;
-		List<Person> persons = new ArrayList<Person>();
-		List<Elevator> elevators = new ArrayList<Elevator>();
-		List<Person> waitingPerson = new ArrayList<Person>();
+		int maxPerson = 0;		
 		Scanner sc = new Scanner(System.in);
 		System.out.print("Nhập số thang máy: ");
 		totalElevator = sc.nextInt();
@@ -30,45 +27,11 @@ public class Test {
 		// Khởi tạo thang máy
 		for(int i = 0; i < totalElevator; i++) {
 			Elevator elevator = new Elevator();
-			elevator.setDirection(DIRECTION.STOP);
+			elevator.setDirection(DIRECTION.UP);
 			elevator.setId(i);
 			elevator.setMaxPerson(maxPerson);
 			elevators.add(elevator);
 		}
-
-//		
-//		while(true) {
-//			Person per = new Person();
-//			System.out.print("Nhập tầng đi:");
-//			per.setFloorFrom(sc.nextInt());
-//			System.out.print("Nhập số đến:");
-//			per.setFloorTo(sc.nextInt());
-//			persons.add(per);
-//			Thread.sleep(5000);
-//		}
-		
-//		mockDatas mock = new mockDatas();
-//		elevators = mock.mockElevators;
-//		for(int i= 0; i< elevators.size(); i++) {
-//			System.out.println(elevators.get(i).toString());
-//			System.out.println();
-//		}
-//		System.out.println("_____________________________________________________________________");
-		
-//		Person person10 = new Person();
-//		person10.setId("10");
-//		person10.setFloorFrom(2);
-//		person10.setFloorTo(1);
-//		person10.setDirection(DIRECTION.DOWN);
-//		
-//		
-//		
-//		Person person11 = new Person();
-//		person11.setId("11");
-//		person11.setFloorFrom(4);
-//		person11.setFloorTo(5);
-//		person11.setDirection(DIRECTION.UP);
-
 			
 		for(int i= 0; i< elevators.size(); i++) {
 			System.out.println(elevators.get(i).toString());
@@ -84,8 +47,11 @@ public class Test {
 		
 		
 		while(true) {
+			System.out.println();
 			System.out.println("_________________________Update__________________________________________________");
-//			helper.UpdateAllElevator(elevators, 5);
+			//Xử lí nhưng trường hợp người bị đợi thang
+			System.out.println("Danh sách người chưa có thang: " + GetListWaittingPerson());
+			
 			//Luồng in và cập nhật trong thái liên tục sau mỗi giây
 			ThreadUpdateUAllElevator t1 = new ThreadUpdateUAllElevator();	
 			t1.setElevators(elevators);
@@ -98,7 +64,15 @@ public class Test {
 				System.out.println(elevators.get(i).toString());
 				
 			}				
-			Thread.sleep(3000);
+			Thread.sleep(7000);
 		}
+	}
+	
+	public static String GetListWaittingPerson() {
+		String result = "";
+		for (int i=0; i< waitingPerson.size(); i++) {
+			result += waitingPerson.get(i).getId() + " - " + waitingPerson.get(i).getFloorFrom() + " - " + waitingPerson.get(i).getFloorTo() + " - " + waitingPerson.get(i).getDirection() + " * ";
+		}
+		return result;
 	}
 }
