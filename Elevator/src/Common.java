@@ -1,0 +1,15 @@
+enum DIRECTION {
+	DOWN,
+	UP,
+	STOP
+}
+
+enum OCCUPIE_STATUS {
+	FULL,
+	HAVE_OCCUPIE
+}
+
+enum OPEN_CLOSE_STATUS {
+	CLOSE,
+	OPEN
+}
