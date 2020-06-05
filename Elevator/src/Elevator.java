@@ -9,6 +9,7 @@ public class Elevator {
 	private OCCUPIE_STATUS occupieStatus = OCCUPIE_STATUS.HAVE_OCCUPIE;
 	private int maxPerson = 10;
 	private List<Person> persons = new ArrayList<Person>();
+	private boolean checkRemoveSuccess = false;
 
 	// Hàm cập nhật lại vị trí và hướng của thang
 	public void updatePosition(int totalFloor) throws InterruptedException {
@@ -33,9 +34,10 @@ public class Elevator {
 		}
 		// Kiểm tra xem có người ra thang. Nếu có thì loại bỏ khỏi List Person và loại bỏ tầng đó. Dừng 1s
 		if (CheckPersonOutElevator()) {
+			Thread.sleep(2000);
 			System.out.println("Thang số: " + id + ", Tầng hiện tại là: "+ this.position + " có người đang đi ra khỏi thang");
-			RemoveAllPerson();
-			RemoveFloor();
+			RemoveAllPerson(this.position);
+			RemoveFloor(this.position);
 		}
 		// Kiểm tra nếu thang không còn người đi lên xuống nữa thì chuyển thang sang trạng thái dừng.
 //		if (this.persons.size() == 0) {
@@ -52,22 +54,22 @@ public class Elevator {
 	}
 	
 	//Hàm loại bỏ tất cả người có tầng đến là tầng hiện tại, dừng 1s
-	public void RemoveAllPerson() throws InterruptedException {
+	public void RemoveAllPerson(int position) throws InterruptedException {
 		try {
 			List<Integer> indexs = new ArrayList<Integer>();
 			for(int i= 0; i<this.persons.size(); i++) {
-				if (this.persons.get(i).getFloorTo() == this.position) {
+				if (this.persons.get(i).getFloorTo() == position) {
 					indexs.add(i);
 //					System.out.println("Thang số: " + this.id + ", vị trí: " + this.position + " index " +
 //					i + " được chọn loại bỏ, person size: "+ this.persons.size()+ "\nNgười là: " + GetListPerson(this.persons));
 				}
 			}
 			if (indexs.size() > 0) {
+				System.out.println("indexs la:" + indexs.toString());
 				for(int j= 0; j< indexs.size(); j++) {
 					RemovePerson(this.persons.get(j));
 				}
-				System.out.println("Thang máy số: " + this.id + " , Vị trí thang " + this.position + " dừng 2 giây cho mọi người = "+ indexs.toString() +" ra tầng");
-				Thread.sleep(2000);
+				System.out.println("Thang máy số: " + this.id + " , Vị trí thang " + position + " dừng 2 giây cho mọi người = "+ indexs.toString() +" ra tầng");
 			}
 		} catch (Exception e) {
 			System.out.println("Lỗi xóa người dùng RemoveAllPerson, "+ e);
@@ -85,11 +87,11 @@ public class Elevator {
 	}
 	
 	//Hàm loại bỏ tầng hiện tại ra khỏi Floors
-	public void RemoveFloor() {
+	public void RemoveFloor(int position) {
 		try {
 			int index = -1;
 			for(int i=0; i< this.floors.size(); i++) {
-				if(this.floors.get(i).getFloorId() == this.position) {
+				if(this.floors.get(i).getFloorId() == position) {
 					index= i;
 				}
 			}

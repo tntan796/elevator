@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -74,6 +75,25 @@ public class helper {
 				}
 				return -1;
 			}
+		}
+		
+		// Sắp xếp List thang máy theo ưu tiên: Vị trí > Số người trên thang. Nếu thang đi lên quá vị trí đang chọn
+		// thì thang nào max sẽ được chọn. Ngược lại
+		static void OrderElevator(List<Elevator> elevators, DIRECTION type) {
+		    Collections.sort(elevators, new Comparator() {
+		        public int compare(Object o1, Object o2) {
+
+		            Integer x1 = ((Elevator) o1).getPosition();
+		            Integer x2 = ((Elevator) o2).getPosition();
+		            int sComp = x1.compareTo(x2);
+
+		            if (sComp != 0) {
+		               return sComp;
+		            } 
+		            Integer x3 = ((Elevator) o1).getPersons().size();
+		            Integer x4 = ((Elevator) o2).getPersons().size();
+		            return x3.compareTo(x4);
+		    }});
 		}
 		
 		//Tạo ra mã bất kỳ

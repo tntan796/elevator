@@ -64,7 +64,7 @@ public class Test {
 				System.out.println(elevators.get(i).toString());
 				
 			}				
-			Thread.sleep(7000);
+			Thread.sleep(5000);
 		}
 	}
 	

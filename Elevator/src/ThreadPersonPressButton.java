@@ -48,12 +48,17 @@ public class ThreadPersonPressButton  implements Runnable{
 				if (t == -1) {
 					System.out.println("Không con thang nào trống");
 					waitingPerson.add(person);
+					List<Elevator> cloneElevator = new ArrayList<Elevator>(elevators);
+					helper.OrderElevator(cloneElevator, DIRECTION.UP);
+					for(int i=0; i< cloneElevator.size(); i++) {
+						System.out.println(cloneElevator.get(i).toString());
+					}
 				} else {
 					System.out.println("Thang được chọn là:" + elevators.get(t));
 					// Kiểm tra xem nếu hướng của thang đang dừng thì cho hướng của thang hoạt động lại
-					if (elevators.get(t).getDirection() == DIRECTION.STOP) {
-						elevators.get(t).setDirection(person.getDirection());
-					}
+//					if (elevators.get(t).getDirection() == DIRECTION.STOP) {
+//						elevators.get(t).setDirection(person.getDirection());
+//					}
 					elevators.get(t).addPerson(person);			
 					System.out.println("Thang sau khi thêm person là:\n" + elevators.get(t));
 				}
