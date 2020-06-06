@@ -40,6 +40,7 @@ public class Test {
 		// Luồng chạy thang máy. Bên trong sẽ chứa vòng lặp vô hạn để có thể nhận dữ liệu nhập bất kì lúc nào
 		ThreadPersonPressButton t2 = new ThreadPersonPressButton();	
 		t2.setElevators(elevators);
+		t2.setTotalFloor(totalFloor);
 		t2.setWaitingPerson(waitingPerson);
 		Thread threadTemp2 = new Thread(t2);
 		threadTemp2.start();

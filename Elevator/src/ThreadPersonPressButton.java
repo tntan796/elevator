@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -8,8 +9,17 @@ import java.util.UUID;
 public class ThreadPersonPressButton  implements Runnable{
 	List<Elevator> elevators = new ArrayList<Elevator>();
 	List<Person> waitingPerson = new ArrayList<Person>();
+	int totalFloor;
 	
 	
+	public int getTotalFloor() {
+		return totalFloor;
+	}
+
+	public void setTotalFloor(int totalFloor) {
+		this.totalFloor = totalFloor;
+	}
+
 	public List<Person> getWaitingPerson() {
 		return waitingPerson;
 	}
@@ -50,11 +60,23 @@ public class ThreadPersonPressButton  implements Runnable{
 					System.out.println("Không con thang nào trống");
 					// Lưu lại người chưa được vào thang để xử lí sau
 					waitingPerson.add(person);
-					List<Elevator> cloneElevator = new ArrayList<Elevator>(elevators);
-					helper.OrderElevator(cloneElevator, DIRECTION.UP);
-					for(int i=0; i< cloneElevator.size(); i++) {
-						System.out.println(cloneElevator.get(i).toString());
+					List<Integer> test = new ArrayList<Integer>();
+					for(int i=0; i<elevators.size(); i++) {
+						test.add(helper.CountLength(person.getFloorFrom(), elevators.get(i).getPosition(), totalFloor,
+								elevators.get(i).getPersons().size(), elevators.get(i).getDirection(), person.getDirection()));
 					}
+					
+					// Thang được chọn là thang có độ dài ngắn nhất
+					int minIndex = test.indexOf(Collections.min(test));
+					System.out.println("Thang máy chờ: " + elevators.get(minIndex));
+					
+//					// Tạo ra một mảng clone của các thang máy. Mảng này sẽ sắp xếp theo ưu tiên: Vị trí của thang và người.
+//					List<Elevator> cloneElevator = new ArrayList<Elevator>(elevators);
+//					helper.OrderElevator(cloneElevator, DIRECTION.UP);
+//					System.out.println("Thang máy sau khi xếp lại: " + cloneElevator.size());
+//					for(int i=0; i< cloneElevator.size(); i++) {
+//						System.out.println(cloneElevator.get(i).toString());
+//					}
 				} else {
 					System.out.println("Thang được chọn là:" + elevators.get(t));
 					// Kiểm tra xem nếu hướng của thang đang dừng thì cho hướng của thang hoạt động lại

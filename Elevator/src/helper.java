@@ -69,7 +69,15 @@ public class helper {
 		// Sắp xếp List thang máy theo ưu tiên: Vị trí > Số người trên thang. Nếu thang đi lên quá vị trí đang chọn
 		// thì thang nào max sẽ được chọn. Ngược lại
 		static void OrderElevator(List<Elevator> elevators, DIRECTION type) {
-		    Collections.sort(elevators, new Comparator() {
+			List<Elevator> result = new ArrayList<Elevator>();
+			// Tìm list các thang cùng chiều. 
+			for(int i = 0; i< elevators.size(); i++) {
+				if (elevators.get(i).getDirection() == type) {
+					result.add(elevators.get(i));
+				}
+			}
+			
+		    Collections.sort(result, new Comparator() {
 		        public int compare(Object o1, Object o2) {
 
 		            Integer x1 = ((Elevator) o1).getPosition();
@@ -83,6 +91,29 @@ public class helper {
 		            Integer x4 = ((Elevator) o2).getPersons().size();
 		            return x3.compareTo(x4);
 		    }});
+		}
+		
+		// Hàm tính khoảng cách tới điểm hiện tại. Trong trường hợp không có thang
+		public static int CountLength(int positionPerson, int positionElevator, int totalFloor, int totalPerson,
+				DIRECTION directionElevator, DIRECTION directionPerson) {
+			
+			int result = 0;
+			if (directionElevator == directionPerson) {
+				// Trường hợp cùng chiều => Phải đi đến đích => Quay lại về đích => Rồi quay cùng chiều
+				 result = (totalFloor - positionElevator) + totalFloor + positionPerson;				 
+				 // Nếu như thang có người, thì ta sẽ lấy số người + với 2s tương ứng với mở và đóng cửa
+				 if (totalPerson > 0) {
+						result += totalPerson + 2;
+				}
+			} else {
+				// Trường hợp ngược chiều thì chỉ cần Về đích => Quay cùng chiều
+				result = totalFloor + positionPerson;
+				//Nếu như thang có người, thì ta sẽ lấy số người + với 2s tương ứng với mở và đóng cửa
+				if (totalPerson > 0) {
+					result += totalPerson + 2;
+				}
+			}
+			return result;
 		}
 		
 		//Tạo ra mã bất kỳ, giúp phân biệt các person với nhau
