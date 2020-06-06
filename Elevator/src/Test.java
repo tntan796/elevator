@@ -48,7 +48,7 @@ public class Test {
 		
 		while(true) {
 			System.out.println();
-			System.out.println("_________________________Update__________________________________________________");
+			System.out.println("________________________________Cập nhật sau 1s_________________________________________");
 			//Xử lí nhưng trường hợp người bị đợi thang
 			System.out.println("Danh sách người chưa có thang: " + GetListWaittingPerson());
 			
@@ -59,7 +59,7 @@ public class Test {
 			Thread threadTemp1 = new Thread(t1);
 			threadTemp1.start();	
 			
-			System.out.println("Tình trang thang hiện tại");
+			System.out.println("Tình trạng thang hiện tại");
 			for(int i= 0; i< elevators.size(); i++) {
 				System.out.println(elevators.get(i).toString());
 				
@@ -71,7 +71,7 @@ public class Test {
 	public static String GetListWaittingPerson() {
 		String result = "";
 		for (int i=0; i< waitingPerson.size(); i++) {
-			result += waitingPerson.get(i).getId() + " - " + waitingPerson.get(i).getFloorFrom() + " - " + waitingPerson.get(i).getFloorTo() + " - " + waitingPerson.get(i).getDirection() + " * ";
+			result += waitingPerson.get(i).getId() + " - " + waitingPerson.get(i).getFloorFrom() + " - " + waitingPerson.get(i).getFloorTo() + " - " + waitingPerson.get(i).getDirection() + " ___|___ ";
 		}
 		return result;
 	}

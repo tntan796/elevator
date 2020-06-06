@@ -35,6 +35,7 @@ public class ThreadPersonPressButton  implements Runnable{
 				String data = sc.nextLine();
 				String[] floors = data.split(" ");
 				System.out.println("Nhập tầng thành công! Giá trị vừa nhập là: " + data);
+				// Tạo ra 1 đối tượng person tương ứng với giá trị vừa nhập tầng hiện tại và tầng đến.
 				Person person = new Person();
 				person.setId(helper.GenerateStringKey());
 				person.setFloorFrom(Integer.parseInt(floors[0]));
@@ -47,6 +48,7 @@ public class ThreadPersonPressButton  implements Runnable{
 				int t = helper.findElevator(elevators, person);
 				if (t == -1) {
 					System.out.println("Không con thang nào trống");
+					// Lưu lại người chưa được vào thang để xử lí sau
 					waitingPerson.add(person);
 					List<Elevator> cloneElevator = new ArrayList<Elevator>(elevators);
 					helper.OrderElevator(cloneElevator, DIRECTION.UP);

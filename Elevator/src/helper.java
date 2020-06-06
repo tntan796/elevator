@@ -16,25 +16,13 @@ public class helper {
 			return result;
 		}
 	// Tìm thang máy phù hợp
-		public static int findElevator(List<Elevator> elevators, Person person) {
-			// List thang máy đi lên có thể trở được người
-			List<Integer> elevatorsUp = new ArrayList<Integer>();
-			// List thang máy đi xuống có thể trở được người
-			List<Integer> elevatorsDown = new ArrayList<Integer>();
+		public static int findElevator(List<Elevator> elevators, Person person) {		
+			List<Integer> elevatorsUp = new ArrayList<Integer>(); 	// List thang máy đi lên có thể trở được người			
+			List<Integer> elevatorsDown = new ArrayList<Integer>(); // List thang máy đi xuống có thể trở được người
 			// Người muốn đi xuống
 			if (person.getDirection() == DIRECTION.DOWN) {
-				// Nếu trường hợp khởi tạo tất cả các thang đều đang là stop thì chọn 1 thang bất kì// Chưa nghĩ ra giải quyết
 				if (CheckElevatorInit(elevators) == true) {					
-					for (int i = 0; i < elevators.size(); i++) {
-						Elevator el = elevators.get(i);
-						// Ta kiểm tra xem hướng của thang đang là đi xuống Down, hoặc đang Stop, xem thang có đang trống, và vị trí của thang có quá người hiện tại chưa.
-						if ((el.getDirection() == DIRECTION.DOWN || el.getDirection() == DIRECTION.STOP)
-								&& el.getOccupieStatus() == OCCUPIE_STATUS.HAVE_OCCUPIE
-								&& el.getPosition() >= person.getFloorFrom()
-							) {
-							elevatorsDown.add(el.getId());
-						}
-					}					
+					// Nếu trường hợp khởi tạo tất cả các thang đều đang là stop thì chọn 1 thang bất kì// Chưa nghĩ ra giải quyết		
 				} else {
 					// Trường hợp ngược lại
 					for (int i = 0; i < elevators.size(); i++) {
@@ -43,15 +31,15 @@ public class helper {
 						if ((el.getDirection() == DIRECTION.DOWN || el.getDirection() == DIRECTION.STOP)
 								&& el.getOccupieStatus() == OCCUPIE_STATUS.HAVE_OCCUPIE
 								&& el.getPosition() >= person.getFloorFrom()
+								&& el.getPosition() > person.getFloorTo()
 							) {
 							elevatorsDown.add(el.getId());
 						}
 					}
 				}
 				System.out.println("List thang máy xuống có thể chọn:" + elevatorsDown.toString());
-				// Lấy phần tử nhỏ nhất sẽ là thang máy được chọn
 				if (elevatorsDown.size() > 0) {
-					int minIndex = elevatorsDown.indexOf(Collections.min(elevatorsDown));
+					int minIndex = elevatorsDown.indexOf(Collections.min(elevatorsDown)); // Lấy phần tử nhỏ nhất sẽ là thang máy được chọn chính là thang được chọn
 					System.out.println("Thông tin thang xuống được chọn: " + elevatorsDown.get(minIndex));
 					return elevatorsDown.get(minIndex);
 				}
@@ -60,16 +48,17 @@ public class helper {
 				// Người muốn đi lên
 				for (int i = 0; i < elevators.size(); i++) {
 					Elevator el = elevators.get(i);
+					// Để thang máy được chọn thì vị trí hiện tại của thang phải cùng hướng đi với người bấm, Còn chỗ. Vị trí của thang thì phải < cả vị trí hiện tại và vị trí muốn đến của người bấm thang
 					if ((el.getDirection() == DIRECTION.UP || el.getDirection() == DIRECTION.STOP)
 							&& el.getOccupieStatus() == OCCUPIE_STATUS.HAVE_OCCUPIE
-							&& el.getPosition() <= person.getFloorTo()) {
+							&& el.getPosition() < person.getFloorTo()
+							&& el.getPosition() <= person.getFloorFrom()) {
 						elevatorsUp.add(el.getId());
 					}
 				}
 				if (elevatorsUp.size() > 0) {
-					System.out.println("List thang máy lên có thể chọn:" + elevatorsUp.toString());
-					// Lấy phần tử lớn nhất sẽ là thang máy được chọn
-					int maxIndex = elevatorsUp.indexOf(Collections.max(elevatorsUp));
+					System.out.println("List thang máy lên có thể chọn:" + elevatorsUp.toString());					
+					int maxIndex = elevatorsUp.indexOf(Collections.max(elevatorsUp)); // Lấy phần tử lớn nhất sẽ là thang máy được chọn chính là thang sẽ được chọn
 					System.out.println("Thông tin thang máy lên được chọn: " + elevatorsUp.get(maxIndex));
 					return elevatorsUp.get(maxIndex);
 				}
@@ -96,7 +85,7 @@ public class helper {
 		    }});
 		}
 		
-		//Tạo ra mã bất kỳ
+		//Tạo ra mã bất kỳ, giúp phân biệt các person với nhau
 		public static String GenerateStringKey() {			  
 		    int leftLimit = 97; // letter 'a'
 		    int rightLimit = 122; // letter 'z'
