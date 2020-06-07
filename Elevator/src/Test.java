@@ -8,7 +8,6 @@ import java.util.Scanner;
 public class Test {	
 	static List<Person> persons = new ArrayList<Person>();
 	static List<Elevator> elevators = new ArrayList<Elevator>();
-	static List<Person> waitingPerson = new ArrayList<Person>();
 	
 	public static void main(String [] args) throws InterruptedException {
 		int totalElevator = 0;
@@ -41,7 +40,6 @@ public class Test {
 		ThreadPersonPressButton t2 = new ThreadPersonPressButton();	
 		t2.setElevators(elevators);
 		t2.setTotalFloor(totalFloor);
-		t2.setWaitingPerson(waitingPerson);
 		Thread threadTemp2 = new Thread(t2);
 		threadTemp2.start();
 		
@@ -49,10 +47,7 @@ public class Test {
 		
 		while(true) {
 			System.out.println();
-			System.out.println("________________________________Cập nhật sau 1s_________________________________________");
-			//Xử lí nhưng trường hợp người bị đợi thang
-			System.out.println("Danh sách người chưa có thang: " + GetListWaittingPerson());
-			
+			System.out.println("________________________________Cập nhật sau 1s_________________________________________");		
 			//Luồng in và cập nhật trong thái liên tục sau mỗi giây
 			ThreadUpdateUAllElevator t1 = new ThreadUpdateUAllElevator();	
 			t1.setElevators(elevators);
@@ -69,11 +64,4 @@ public class Test {
 		}
 	}
 	
-	public static String GetListWaittingPerson() {
-		String result = "";
-		for (int i=0; i< waitingPerson.size(); i++) {
-			result += waitingPerson.get(i).getId() + " - " + waitingPerson.get(i).getFloorFrom() + " - " + waitingPerson.get(i).getFloorTo() + " - " + waitingPerson.get(i).getDirection() + " ___|___ ";
-		}
-		return result;
-	}
 }

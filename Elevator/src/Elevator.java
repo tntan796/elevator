@@ -10,9 +10,33 @@ public class Elevator {
 	private int maxPerson = 10; // Kích thước tối đa của thang
 	private List<Person> persons = new ArrayList<Person>(); // Những người đang ở trong thang
 	private boolean checkRemove = false; // Tham số kiểm tra nếu như đang dừng để cho người ra vào thì không thay đổi position ở thang máy này
+	private List<Person> personsWaitting = new ArrayList<Person>(); // Những người đang chờ thang
+	public List<Person> getPersonsWaitting() {
+		return personsWaitting;
+	}
+
+	public String GetListWaittingPerson() {
+		String result = "";
+		for (int i=0; i< personsWaitting.size(); i++) {
+			result += personsWaitting.get(i).getId() + " - " + personsWaitting.get(i).getFloorFrom() + " - " + personsWaitting.get(i).getFloorTo() + " - " + personsWaitting.get(i).getDirection() + "\n";
+		}
+		return result;
+	}
+
+	public void setPersonsWaitting(List<Person> personsWaitting) {
+		this.personsWaitting = personsWaitting;
+	}
+	
+	public void addPersonWaitting(Person person) {
+		this.personsWaitting.add(person);
+	}
+
 
 	// Hàm cập nhật lại vị trí và hướng của thang
 	public void updatePosition(int totalFloor) throws InterruptedException {
+		System.out.println("Danh sách người đang đợi của thang " + this.id + " là:\n" + this.GetListWaittingPerson());
+		System.out.println("____________________________________________________________");
+		
 		if (this.checkRemove == false) {
 			if (this.direction == DIRECTION.UP) {
 				// Nếu như thang máy đang đi lên mà đến tầng cuối cùng thì đổi thành đi xuống
