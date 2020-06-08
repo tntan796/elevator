@@ -38,8 +38,14 @@ public class helper {
 					}
 				}
 				System.out.println("List thang máy xuống có thể chọn:" + elevatorsDown.toString());
+				// Chọn trong các thang này thang nào có ít người đang waitting hơn
+				List<Integer> tempElevatorDown = new ArrayList<Integer>();
+				for(int i=0; i< elevatorsDown.size(); i++) {
+					tempElevatorDown.add((elevators.get(elevatorsDown.get(i)).getPersons().size() * 2) + elevators.get(elevatorsDown.get(i)).getWaitting().size());
+				}
+				
 				if (elevatorsDown.size() > 0) {
-					int minIndex = elevatorsDown.indexOf(Collections.min(elevatorsDown)); // Lấy phần tử nhỏ nhất sẽ là thang máy được chọn chính là thang được chọn
+					int minIndex = tempElevatorDown.indexOf(Collections.min(tempElevatorDown)); // Lấy phần tử nhỏ nhất sẽ là thang máy được chọn chính là thang được chọn
 					System.out.println("Thông tin thang xuống được chọn: " + elevatorsDown.get(minIndex));
 					return elevatorsDown.get(minIndex);
 				}
@@ -56,9 +62,13 @@ public class helper {
 						elevatorsUp.add(el.getId());
 					}
 				}
+				List<Integer> tempElevatorUp = new ArrayList<Integer>();
+				for(int i=0; i< elevatorsDown.size(); i++) {
+					tempElevatorUp.add((elevators.get(elevatorsDown.get(i)).getPersons().size() * 2) + elevators.get(elevatorsDown.get(i)).getWaitting().size());
+				}
 				if (elevatorsUp.size() > 0) {
 					System.out.println("List thang máy lên có thể chọn:" + elevatorsUp.toString());					
-					int maxIndex = elevatorsUp.indexOf(Collections.max(elevatorsUp)); // Lấy phần tử lớn nhất sẽ là thang máy được chọn chính là thang sẽ được chọn
+					int maxIndex = tempElevatorUp.indexOf(Collections.max(tempElevatorUp)); // Lấy phần tử lớn nhất sẽ là thang máy được chọn chính là thang sẽ được chọn
 					System.out.println("Thông tin thang máy lên được chọn: " + elevatorsUp.get(maxIndex));
 					return elevatorsUp.get(maxIndex);
 				}
@@ -94,24 +104,31 @@ public class helper {
 		}
 		
 		// Hàm tính khoảng cách tới điểm hiện tại. Trong trường hợp không có thang
-		public static int CountLength(int positionPerson, int positionElevator, int totalFloor, int totalPerson,
-				DIRECTION directionElevator, DIRECTION directionPerson) {
+		public static int CountLength(Elevator elevator, Person person, int totalFloor) {
 			
 			int result = 0;
-			if (directionElevator == directionPerson) {
+			if (elevator.getDirection() == person.getDirection()) {
 				// Trường hợp cùng chiều => Phải đi đến đích => Quay lại về đích => Rồi quay cùng chiều
-				 result = (totalFloor - positionElevator) + totalFloor + positionPerson;				 
+				 result = (totalFloor - elevator.getPosition()) + totalFloor + person.getFloorFrom();				 
 				 // Nếu như thang có người, thì ta sẽ lấy số người + với 2s tương ứng với mở và đóng cửa
-				 if (totalPerson > 0) {
-						result += totalPerson + 2;
-				}
+				 if (elevator.getPersons().size() > 0) {
+						result += elevator.getPersons().size() + 2;
+				 }
+				 // Những người trong waitting cũng cộng 2
+				 if (elevator.getWaitting().size() > 0) {
+						result += elevator.getWaitting().size() + 2;
+				 }
 			} else {
 				// Trường hợp ngược chiều thì chỉ cần Về đích => Quay cùng chiều
-				result = totalFloor + positionPerson;
+				result = totalFloor + person.getFloorFrom();
 				//Nếu như thang có người, thì ta sẽ lấy số người + với 2s tương ứng với mở và đóng cửa
-				if (totalPerson > 0) {
-					result += totalPerson + 2;
+				if (elevator.getPersons().size() > 0) {
+					result += elevator.getPersons().size() + 2;
 				}
+				// Những người trong waitting cũng cộng 2
+				 if (elevator.getWaitting().size() > 0) {
+						result += elevator.getWaitting().size() + 2;
+				 }
 			}
 			return result;
 		}

@@ -8,7 +8,6 @@ import java.util.UUID;
 
 public class ThreadPersonPressButton  implements Runnable{
 	List<Elevator> elevators = new ArrayList<Elevator>();
-	List<Person> waitingPerson = new ArrayList<Person>();
 	int totalFloor;
 	
 	
@@ -18,14 +17,6 @@ public class ThreadPersonPressButton  implements Runnable{
 
 	public void setTotalFloor(int totalFloor) {
 		this.totalFloor = totalFloor;
-	}
-
-	public List<Person> getWaitingPerson() {
-		return waitingPerson;
-	}
-
-	public void setWaitingPerson(List<Person> waitingPerson) {
-		this.waitingPerson = waitingPerson;
 	}
 
 	public List<Elevator> getElevators() {
@@ -52,38 +43,22 @@ public class ThreadPersonPressButton  implements Runnable{
 				person.setFloorTo(Integer.parseInt(floors[1]));
 				person.setDirection(person.getFloorFrom() - person.getFloorTo() > 0 ? DIRECTION.DOWN : DIRECTION.UP);			
 				// Xét xem trong Queue còn người nào phù hợp không
-				
-				
 				// Tìm ra thang máy phù hợp với người vừa nhập
 				int t = helper.findElevator(elevators, person);
 				if (t == -1) {
 					System.out.println("Không con thang nào trống");
 					// Lưu lại người chưa được vào thang để xử lí sau
-					waitingPerson.add(person);
 					List<Integer> test = new ArrayList<Integer>();
 					for(int i=0; i<elevators.size(); i++) {
-						test.add(helper.CountLength(person.getFloorFrom(), elevators.get(i).getPosition(), totalFloor,
-								elevators.get(i).getPersons().size(), elevators.get(i).getDirection(), person.getDirection()));
+						test.add(helper.CountLength(elevators.get(i), person, totalFloor));
 					}
-					
 					// Thang được chọn là thang có độ dài ngắn nhất
 					int minIndex = test.indexOf(Collections.min(test));
-					System.out.println("Thang máy chờ: " + elevators.get(minIndex));
-					
-//					// Tạo ra một mảng clone của các thang máy. Mảng này sẽ sắp xếp theo ưu tiên: Vị trí của thang và người.
-//					List<Elevator> cloneElevator = new ArrayList<Elevator>(elevators);
-//					helper.OrderElevator(cloneElevator, DIRECTION.UP);
-//					System.out.println("Thang máy sau khi xếp lại: " + cloneElevator.size());
-//					for(int i=0; i< cloneElevator.size(); i++) {
-//						System.out.println(cloneElevator.get(i).toString());
-//					}
+					System.out.println("Thang máy chờ: " + elevators.get(minIndex).getId() + " - Vị trí: " + elevators.get(minIndex).getPosition());
+					elevators.get(minIndex).setWaitting(person);	
 				} else {
 					System.out.println("Thang được chọn là:" + elevators.get(t));
-					// Kiểm tra xem nếu hướng của thang đang dừng thì cho hướng của thang hoạt động lại
-//					if (elevators.get(t).getDirection() == DIRECTION.STOP) {
-//						elevators.get(t).setDirection(person.getDirection());
-//					}
-					elevators.get(t).addPerson(person);			
+					elevators.get(t).setWaitting(person);		
 					System.out.println("Thang sau khi thêm person là:\n" + elevators.get(t));
 				}
 			} catch (Exception e) {

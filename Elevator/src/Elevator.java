@@ -5,14 +5,59 @@ public class Elevator {
 	private int id = 0; // ID phân biệt các tháng
 	private DIRECTION direction = DIRECTION.UP; // Hướng đi của thang
 	private List<Floor> floors = new ArrayList<Floor>();
-	private int position = 0; // Vị trí hiện tại của thang máy
+	private int position = 1; // Vị trí hiện tại của thang máy
 	private OCCUPIE_STATUS occupieStatus = OCCUPIE_STATUS.HAVE_OCCUPIE; // Thang có khả năng chứa thêm người hay không
 	private int maxPerson = 10; // Kích thước tối đa của thang
 	private List<Person> persons = new ArrayList<Person>(); // Những người đang ở trong thang
 	private boolean checkRemove = false; // Tham số kiểm tra nếu như đang dừng để cho người ra vào thì không thay đổi position ở thang máy này
+	private List<Person> waittings = new ArrayList<Person>();
+	private boolean lock = true;
+	
+	public String GetListWaittingPerson(List<Person> persons) {
+		String result = "";
+		for (int i=0; i< persons.size(); i++) {
+			result += this.id + " - " + persons.get(i).getId() + " - " + persons.get(i).getFloorFrom() + " - "
+					+ persons.get(i).getFloorTo() + " - " + persons.get(i).getDirection() + "\n";
+		}
+		return result;
+	}
+	
+	// Lấy 1 người trong hàng đợi ra phù hợp với tầng hiện tại
+	public Person getPersonWaiting() {
+		for(int i=0; i< this.waittings.size(); i++) {
+			if(this.waittings.get(i).getDirection() == this.direction
+					&& this.waittings.get(i).getFloorFrom()>= this.position) {
+				return this.waittings.get(i);
+			}
+		}
+		return null;
+	}
+	
 
+	public void ChuyenNguoiTuWaittingSangRun() {
+		int soNguoiCan = this.maxPerson - this.persons.size();
+		for (int i = 0 ; i< soNguoiCan; i++) {
+			Person temp = getPersonWaiting();
+			if (temp != null) {
+				System.out.println("Người lấy từ hàng đợi của thang : " + this.id + " vị trí thang " + this.position + "\n" + temp);
+				// Thêm người được lấy từ Hàng đợi ra
+				this.persons.add(temp);
+				// Loại bỏ người đó trong hàng đợi
+				this.waittings.remove(temp);
+			}
+		}
+	}
+	
 	// Hàm cập nhật lại vị trí và hướng của thang
 	public void updatePosition(int totalFloor) throws InterruptedException {
+		System.out.println();
+		System.out.println("Danh sách người trong hàng đợi của thang:" + this.id);
+		System.out.println(GetListWaittingPerson(this.waittings));
+		ChuyenNguoiTuWaittingSangRun();
+		System.out.println("Danh sách người đang trong thang máy " + this.id);
+		System.out.println(GetListWaittingPerson(this.persons));
+		System.out.println("++++++++++++++++++++++");
+		
 		if (this.checkRemove == false) {
 			if (this.direction == DIRECTION.UP) {
 				// Nếu như thang máy đang đi lên mà đến tầng cuối cùng thì đổi thành đi xuống
@@ -257,4 +302,34 @@ public class Elevator {
 		System.out.println("Thang máy hiện tại: " + this.id + ", Chờ 2s để mọi người " + testName + " vào tầng: "+ this.position);
 		Thread.sleep(10000);
 	}
+	
+	public boolean isCheckRemove() {
+		return checkRemove;
+	}
+
+
+	public void setCheckRemove(boolean checkRemove) {
+		this.checkRemove = checkRemove;
+	}
+
+
+	public List<Person> getWaitting() {
+		return waittings;
+	}
+
+
+	public void setWaitting(Person person) {
+		this.waittings.add(person);
+	}
+
+
+	public boolean isLock() {
+		return lock;
+	}
+
+
+	public void setLock(boolean lock) {
+		this.lock = lock;
+	}
+
 }
