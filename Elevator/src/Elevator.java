@@ -9,9 +9,9 @@ public class Elevator {
 	private OCCUPIE_STATUS occupieStatus = OCCUPIE_STATUS.HAVE_OCCUPIE; // Thang có khả năng chứa thêm người hay không
 	private int maxPerson = 10; // Kích thước tối đa của thang
 	private List<Person> persons = new ArrayList<Person>(); // Những người đang ở trong thang
-	private boolean checkRemove = false; // Tham số kiểm tra nếu như đang dừng để cho người ra vào thì không thay đổi position ở thang máy này
+//	private boolean checkRemove = false; // Tham số kiểm tra nếu như đang dừng để cho người ra vào thì không thay đổi position ở thang máy này
 	private List<Person> waittings = new ArrayList<Person>();
-	private boolean lock = true;
+	private boolean lock = false;
 	
 	public String GetListWaittingPerson(List<Person> persons) {
 		String result = "";
@@ -51,14 +51,14 @@ public class Elevator {
 	// Hàm cập nhật lại vị trí và hướng của thang
 	public void updatePosition(int totalFloor) throws InterruptedException {
 		System.out.println();
+		System.out.println("Lock của thang: " + this.id + " lock = " + this.lock);
 		System.out.println("Danh sách người trong hàng đợi của thang:" + this.id);
 		System.out.println(GetListWaittingPerson(this.waittings));
 		ChuyenNguoiTuWaittingSangRun();
 		System.out.println("Danh sách người đang trong thang máy " + this.id);
 		System.out.println(GetListWaittingPerson(this.persons));
 		System.out.println("++++++++++++++++++++++");
-		
-		if (this.checkRemove == false) {
+		if (this.lock == false) {
 			if (this.direction == DIRECTION.UP) {
 				// Nếu như thang máy đang đi lên mà đến tầng cuối cùng thì đổi thành đi xuống
 				if (this.position < totalFloor) {
@@ -80,14 +80,14 @@ public class Elevator {
 			}
 			// Kiểm tra xem có người ra thang. Nếu có thì loại bỏ khỏi List Person và loại bỏ tầng đó. Dừng 1s
 			if (CheckPersonOutElevator()) {
-				// Cập nhật lại là có người đi ra ngoài. Để thread mới không thay đổi position
-				this.checkRemove = true;
+				this.lock = true;
+				// Cập nhật lại là có người đi ra ngoài. Để thread mới không thay đổi position			
 				// Dừng 2s để vừa Mở cửa, Vừa đóng cửa
 				RemoveAllPerson(this.position);
 				RemoveFloor(this.position);
-				Thread.sleep(10000);
+				Thread.sleep(15000);
 				// Cập nhật lại trang thái thang đang không có người ra vào
-				this.checkRemove = false;
+				this.lock = false;
 			}
 			// Kiểm tra nếu thang không còn người đi lên xuống nữa thì chuyển thang sang trạng thái dừng.
 //			if (this.persons.size() == 0) {
@@ -300,19 +300,9 @@ public class Elevator {
 			addPerson(persons.get(i));
 		}
 		System.out.println("Thang máy hiện tại: " + this.id + ", Chờ 2s để mọi người " + testName + " vào tầng: "+ this.position);
-		Thread.sleep(10000);
+		Thread.sleep(15000);
 	}
 	
-	public boolean isCheckRemove() {
-		return checkRemove;
-	}
-
-
-	public void setCheckRemove(boolean checkRemove) {
-		this.checkRemove = checkRemove;
-	}
-
-
 	public List<Person> getWaitting() {
 		return waittings;
 	}

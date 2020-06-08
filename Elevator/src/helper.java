@@ -63,8 +63,8 @@ public class helper {
 					}
 				}
 				List<Integer> tempElevatorUp = new ArrayList<Integer>();
-				for(int i=0; i< elevatorsDown.size(); i++) {
-					tempElevatorUp.add((elevators.get(elevatorsDown.get(i)).getPersons().size() * 2) + elevators.get(elevatorsDown.get(i)).getWaitting().size());
+				for(int i=0; i< elevatorsUp.size(); i++) {
+					tempElevatorUp.add((elevators.get(elevatorsUp.get(i)).getPersons().size() * 2) + elevators.get(elevatorsUp.get(i)).getWaitting().size());
 				}
 				if (elevatorsUp.size() > 0) {
 					System.out.println("List thang máy lên có thể chọn:" + elevatorsUp.toString());					
