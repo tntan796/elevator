@@ -34,17 +34,27 @@ public class Elevator {
 	}
 	
 
-	public void ChuyenNguoiTuWaittingSangRun() {
+	public void ChuyenNguoiTuWaittingSangRun() throws InterruptedException {
 		int soNguoiCan = this.maxPerson - this.persons.size();
+		boolean isSelectedPerson = false; // Chọn được người
 		for (int i = 0 ; i< soNguoiCan; i++) {
 			Person temp = getPersonWaiting();
 			if (temp != null) {
 				System.out.println("Người lấy từ hàng đợi của thang : " + this.id + " vị trí thang " + this.position + "\n" + temp);
 				// Thêm người được lấy từ Hàng đợi ra
+				// Chờ 2 giây thêm người vào thang
 				this.persons.add(temp);
+				isSelectedPerson = true;
 				// Loại bỏ người đó trong hàng đợi
 				this.waittings.remove(temp);
 			}
+		}
+		if (isSelectedPerson == true) {
+			System.out.println(this.id + " Đợi 2 giây để thêm người");
+			this.lock = true;
+			Thread.sleep(15000);
+			this.lock = false;
+			System.out.print(this.id + " Đã đợi thêm người xong");
 		}
 	}
 	
