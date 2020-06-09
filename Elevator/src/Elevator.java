@@ -98,11 +98,41 @@ public class Elevator {
 		if (this.persons.size() == 0 && this.waittings.size() == 0) {
 			this.direction = DIRECTION.STOP;
 		} else {
-			// Ngược lại sẽ lấy đầu tiền trong hàng đợi ra để làm hướng chạy của thang máy
-			if (this.persons.size() > 0) {
-				this.direction = this.persons.get(0).getDirection();
-			} else {
-				this.direction = this.waittings.get(0).getDirection();
+			if (this.direction == DIRECTION.STOP) {
+				// Ngược lại sẽ lấy đầu tiền trong hàng đợi ra để làm hướng chạy của thang máy. Trường hợp này chỉ có 1 người
+				if (this.persons.size() > 0) {
+					// So sánh với vị trí của thang. Nếu đã quá rồi thì cho đi ngược lại rồi quay lại. Ví dụ đang ở 1 mà ấn 2-1 thì sẽ đi lên rồi quay xuống nếu không sẽ bị quay đi quay lại ở tầng 1 0
+					// Nếu đi lên 
+					if (this.persons.get(0).getDirection() == DIRECTION.UP) {
+						if (this.position > this.persons.get(0).getFloorFrom()) {
+							this.direction = DIRECTION.DOWN;
+						} else {
+							this.direction = DIRECTION.UP;
+						}
+					} else {
+						// Nếu thang đi xuống
+						if (this.position < this.persons.get(0).getFloorFrom()) {
+							this.direction = DIRECTION.UP;
+						} else {
+							this.direction = DIRECTION.DOWN;
+						}
+					}
+				} else {
+					if (this.waittings.get(0).getDirection() == DIRECTION.UP) {
+						if (this.position > this.waittings.get(0).getFloorFrom()) {
+							this.direction = DIRECTION.DOWN;
+						} else {
+							this.direction = DIRECTION.UP;
+						}
+					} else {
+						// Nếu thang đi xuống
+						if (this.position < this.waittings.get(0).getFloorFrom()) {
+							this.direction = DIRECTION.UP;
+						} else {
+							this.direction = DIRECTION.DOWN;
+						}
+					}
+				}
 			}
 		}
 		
