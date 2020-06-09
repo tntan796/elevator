@@ -13,3 +13,14 @@ enum OPEN_CLOSE_STATUS {
 	CLOSE,
 	OPEN
 }
+
+enum STATUS {
+	OPEN1,
+	CLOSE1,
+	OPEN2,
+	CLOSE2,
+	UP1,
+	DOWN1,
+	UP2,
+	DOWN2
+}

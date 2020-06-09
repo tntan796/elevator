@@ -55,14 +55,14 @@ public class ThreadPersonPressButton  implements Runnable{
 					// Thang được chọn là thang có độ dài ngắn nhất
 					int minIndex = test.indexOf(Collections.min(test));
 					System.out.println("Thang máy chờ: " + elevators.get(minIndex).getId() + " - Vị trí: " + elevators.get(minIndex).getPosition());
-					elevators.get(minIndex).setWaitting(person);	
+					elevators.get(minIndex).setWaitting(person);
 				} else {
 					System.out.println("Thang được chọn là:" + elevators.get(t));
 					elevators.get(t).setWaitting(person);		
 					System.out.println("Thang sau khi thêm person là:\n" + elevators.get(t));
 				}
 			} catch (Exception e) {
-				System.out.println("Nhập lại tầng đi bạn ơi");
+				System.out.println("Nhập lại tầng đi bạn ơi: "+ e);
 			}
 		}		
     }   

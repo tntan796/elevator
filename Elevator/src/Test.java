@@ -26,7 +26,7 @@ public class Test {
 		// Khởi tạo thang máy
 		for(int i = 0; i < totalElevator; i++) {
 			Elevator elevator = new Elevator();
-			elevator.setDirection(DIRECTION.UP);
+			elevator.setDirection(DIRECTION.STOP);
 			elevator.setId(i);
 			elevator.setMaxPerson(maxPerson);
 			elevators.add(elevator);
