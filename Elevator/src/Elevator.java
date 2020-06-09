@@ -106,30 +106,38 @@ public class Elevator {
 					if (this.persons.get(0).getDirection() == DIRECTION.UP) {
 						if (this.position > this.persons.get(0).getFloorFrom()) {
 							this.direction = DIRECTION.DOWN;
+							this.status = STATUS.DOWN1;
 						} else {
 							this.direction = DIRECTION.UP;
+							this.status = STATUS.UP1;
 						}
 					} else {
 						// Nếu thang đi xuống
 						if (this.position < this.persons.get(0).getFloorFrom()) {
 							this.direction = DIRECTION.UP;
+							this.status = STATUS.UP1;
 						} else {
 							this.direction = DIRECTION.DOWN;
+							this.status = STATUS.DOWN1;
 						}
 					}
 				} else {
 					if (this.waittings.get(0).getDirection() == DIRECTION.UP) {
 						if (this.position > this.waittings.get(0).getFloorFrom()) {
 							this.direction = DIRECTION.DOWN;
+							this.status = STATUS.DOWN1;
 						} else {
 							this.direction = DIRECTION.UP;
+							this.status = STATUS.UP1;
 						}
 					} else {
 						// Nếu thang đi xuống
 						if (this.position < this.waittings.get(0).getFloorFrom()) {
 							this.direction = DIRECTION.UP;
+							this.status = STATUS.UP1;
 						} else {
 							this.direction = DIRECTION.DOWN;
+							this.status = STATUS.DOWN1;
 						}
 					}
 				}
