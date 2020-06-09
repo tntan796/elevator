@@ -67,7 +67,10 @@ public class helper {
 					tempElevatorUp.add((elevators.get(elevatorsUp.get(i)).getPersons().size() * 2) + elevators.get(elevatorsUp.get(i)).getWaitting().size());
 				}
 				if (elevatorsUp.size() > 0) {
-					System.out.println("List thang máy lên có thể chọn:" + elevatorsUp.toString());					
+					System.out.println("List thang máy lên có thể chọn:" + elevatorsUp.toString());		
+					for(int i=0; i< elevatorsUp.size(); i++) {
+						System.out.println(i + " = " + elevatorsUp.get(i));
+					}
 					int maxIndex = tempElevatorUp.indexOf(Collections.max(tempElevatorUp)); // Lấy phần tử lớn nhất sẽ là thang máy được chọn chính là thang sẽ được chọn
 					System.out.println("Thông tin thang máy lên được chọn: " + elevatorsUp.get(maxIndex));
 					return elevatorsUp.get(maxIndex);

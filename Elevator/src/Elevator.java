@@ -12,7 +12,8 @@ public class Elevator {
 //	private boolean checkRemove = false; // Tham số kiểm tra nếu như đang dừng để cho người ra vào thì không thay đổi position ở thang máy này
 	private List<Person> waittings = new ArrayList<Person>();
 	private boolean lock = false;
-	
+	private STATUS status = STATUS.UP1;
+
 	public String GetListWaittingPerson(List<Person> persons) {
 		String result = "";
 		for (int i=0; i< persons.size(); i++) {
@@ -34,16 +35,64 @@ public class Elevator {
 	}
 	
 
-	public void ChuyenNguoiTuWaittingSangRun() {
+	public void ChuyenNguoiTuWaittingSangRun() throws InterruptedException {
 		int soNguoiCan = this.maxPerson - this.persons.size();
 		for (int i = 0 ; i< soNguoiCan; i++) {
 			Person temp = getPersonWaiting();
 			if (temp != null) {
 				System.out.println("Người lấy từ hàng đợi của thang : " + this.id + " vị trí thang " + this.position + "\n" + temp);
 				// Thêm người được lấy từ Hàng đợi ra
+				// Mở cửa để đón người
+				this.status = STATUS.OPEN1;
+				Thread.sleep(10000);
 				this.persons.add(temp);
+				// Đóng cửa đón người
+				this.status = STATUS.CLOSE1;
+				Thread.sleep(5000);
 				// Loại bỏ người đó trong hàng đợi
 				this.waittings.remove(temp);
+			}
+		}
+	}
+	
+	public STATUS getStatusElevator(Elevator elevator, DIRECTION direction) {
+		if (direction == DIRECTION.DOWN) {
+			// Nếu thang không có người thì đi xuống để đón người
+			if (elevator.getPersons().size() <= 0) {
+				return STATUS.DOWN1;
+			}
+			// Kiểm tra xem có người nào đi xuống không. Nếu có người đi xuống thì thang đi xuống trả người
+			boolean check = false;
+			for (int i = 0; i< elevator.getPersons().size(); i++) {
+				if (elevator.getPersons().get(i).getDirection() == DIRECTION.DOWN
+					&& elevator.getPersons().get(i).getFloorFrom() <= elevator.getPosition()) {
+					check = true;
+					break;
+				}
+			}
+			if (check == true) {
+				return STATUS.DOWN2;
+			} else {
+				return STATUS.DOWN1;
+			}
+		} else {
+			// Trường hợp thang máy đi lên. Nếu không có người thì để lên để đón người
+			if (elevator.getPersons().size() <= 0) {
+				return STATUS.UP1;
+			}
+			// Kiểm tra xem có người nào đi xuống không. Nếu có người đi xuống thì thang đi xuống trả người
+			boolean check = false;
+			for (int i = 0; i< elevator.getPersons().size(); i++) {
+				if (elevator.getPersons().get(i).getDirection() == DIRECTION.UP
+					&& elevator.getPersons().get(i).getFloorFrom() >= elevator.getPosition()) {
+					check = true;
+					break;
+				}
+			}
+			if (check == true) {
+				return STATUS.DOWN2;
+			} else {
+				return STATUS.DOWN1;
 			}
 		}
 	}
@@ -63,29 +112,39 @@ public class Elevator {
 				// Nếu như thang máy đang đi lên mà đến tầng cuối cùng thì đổi thành đi xuống
 				if (this.position < totalFloor) {
 					this.position = this.position + 1;
+					// Cập nhật trạng thái của thang khi thang đi lên
+					getStatusElevator(this, DIRECTION.UP);
 				} else {
 					this.direction = DIRECTION.DOWN;
 					this.position = this.position - 1;
+					getStatusElevator(this, DIRECTION.DOWN);
 				}
 			} else if (this.direction == DIRECTION.DOWN){
 				// Trường hợp đi xuống nếu như thang chưa đến tầng 0 thì trừ. Ngược lại đến tầng không thì đổi chiều
 				if (this.position > 0) {
 					this.position = this.position - 1;
+					getStatusElevator(this, DIRECTION.DOWN);
 				} else {
 					this.direction = DIRECTION.UP;
 					this.position = this.position + 1;
+					getStatusElevator(this, DIRECTION.UP);
 				}
 			} else {
 				// Trường hợp Stop thì giữ nguyên
 			}
-			// Kiểm tra xem có người ra thang. Nếu có thì loại bỏ khỏi List Person và loại bỏ tầng đó. Dừng 1s
+			// Kiểm tra xem có người ra thang. Nếu có thì loại bỏ khỏi List Person và loại bỏ tầng đó
 			if (CheckPersonOutElevator()) {
 				this.lock = true;
 				// Cập nhật lại là có người đi ra ngoài. Để thread mới không thay đổi position			
 				// Dừng 2s để vừa Mở cửa, Vừa đóng cửa
 				RemoveAllPerson(this.position);
 				RemoveFloor(this.position);
-				Thread.sleep(15000);
+				// Mở cửa trả người
+				this.status = STATUS.OPEN2;
+				Thread.sleep(10000);
+				// Đóng cửa trả người
+				this.status = STATUS.CLOSE2;
+				Thread.sleep(5000);
 				// Cập nhật lại trang thái thang đang không có người ra vào
 				this.lock = false;
 			}
@@ -236,10 +295,10 @@ public class Elevator {
 			floorString += this.floors.get(i).getFloorId() + ", ";
 		}
 		for (int i = 0; i < this.persons.size(); i++ ) {
-			personString += this.persons.get(i).getId() + " - " + this.persons.get(i).getFloorTo() + " , ";
+			personString += "(" + this.persons.get(i).getId() + " - " + this.persons.get(i).getFloorTo() + ") , ";
 		}
 		floorString += "]";
-		return "(" + this.id + " - " + this.position + " - " + this.persons.size() + " - " +  this.direction + " - " + floorString + "          __|__ " + personString + ")";
+		return "(" + this.id + " - " + this.position + " - " + this.persons.size() + " - " +  this.status + " - " + floorString + " - " +  this.direction + "    _|_ " + personString + ")";
 	}
 	
 	
@@ -321,5 +380,20 @@ public class Elevator {
 	public void setLock(boolean lock) {
 		this.lock = lock;
 	}
+	
+	public List<Person> getWaittings() {
+		return waittings;
+	}
 
+	public void setWaittings(List<Person> waittings) {
+		this.waittings = waittings;
+	}
+
+	public STATUS getStatus() {
+		return status;
+	}
+
+	public void setStatus(STATUS status) {
+		this.status = status;
+	}
 }
