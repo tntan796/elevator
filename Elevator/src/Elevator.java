@@ -12,7 +12,7 @@ public class Elevator {
 //	private boolean checkRemove = false; // Tham số kiểm tra nếu như đang dừng để cho người ra vào thì không thay đổi position ở thang máy này
 	private List<Person> waittings = new ArrayList<Person>();
 	private boolean lock = false;
-	private STATUS status = STATUS.UP1;
+	private STATUS status = STATUS.IDLE;
 	
 	public String GetListWaittingPerson(List<Person> persons) {
 		String result = "";
@@ -97,6 +97,7 @@ public class Elevator {
 		//Kiểm tra xem nếu như không thang nào có hàng đợi, và người đang đi nữa thì stop lại. Start thang ở phần nhấn nút
 		if (this.persons.size() == 0 && this.waittings.size() == 0) {
 			this.direction = DIRECTION.STOP;
+			this.status = STATUS.IDLE;
 		} else {
 			if (this.direction == DIRECTION.STOP) {
 				// Ngược lại sẽ lấy đầu tiền trong hàng đợi ra để làm hướng chạy của thang máy. Trường hợp này chỉ có 1 người

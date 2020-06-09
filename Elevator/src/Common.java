@@ -22,5 +22,6 @@ enum STATUS {
 	UP1,
 	DOWN1,
 	UP2,
-	DOWN2
+	DOWN2,
+	IDLE
 }
